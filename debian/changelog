@@ -1,3 +1,9 @@
+syscall-intercept (0.2) unstable; urgency=medium
+
+  * Debian release fix.
+
+ -- Dongju Chae <dongju.chae@mangoboost.io>  Thu, 15 Sep 2022 10:45:00 +0900
+
 syscall-intercept (0.1-1) UNRELEASED; urgency=medium
 
   * Initial release.
