@@ -1,4 +1,33 @@
 #!/usr/bin/make -f
-#export DH_VERBOSE=1
+
+ROOT_DIR := $(shell pwd)
+export DEB_HOST_MULTIARCH ?= $(shell dpkg-architecture -qDEB_HOST_MULTIARCH)
+export DEB_HOST_ARCH ?= $(shell dpkg-architecture -qDEB_HOST_ARCH)
+export BUILDDIR=build
+
 %:
-	dh $@ --buildsystem=cmake
+	dh $@
+
+override_dh_auto_clean:
+	rm -rf ${BUILDDIR}
+
+override_dh_auto_configure:
+	mkdir -p ${BUILDDIR}
+	cd ${BUILDDIR} && cmake .. \
+		-DCMAKE_INSTALL_PREFIX=/usr \
+		-DCMAKE_BUILD_TYPE=Release \
+		-DCMAKE_C_COMPILER=gcc \
+		-DCMAKE_C_FLAGS= \
+		-DCMAKE_CXX_FLAGS=
+
+override_dh_auto_build:
+	cd ${BUILDDIR} && make
+
+override_dh_auto_install:
+	cd ${BUILDDIR} && make install DESTDIR=$(ROOT_DIR)/debian/tmp
+
+override_dh_install:
+	dh_install --sourcedir=debian/tmp --list-missing
+
+override_dh_builddeb:
+	dh_builddeb -- -Zgzip
