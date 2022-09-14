@@ -196,12 +196,11 @@ endif()
 
 configure_file(libsyscall_intercept.pc.in libsyscall_intercept.pc)
 
-install(TARGETS syscall_intercept_shared syscall_intercept_static
-	LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-	ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
-	PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+install(TARGETS syscall_intercept_shared LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT libs
+	PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR} COMPONENT dev)
+install(TARGETS syscall_intercept_static ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT dev)
 
-install(FILES ${CMAKE_BINARY_DIR}/libsyscall_intercept.pc DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig)
+install(FILES ${CMAKE_BINARY_DIR}/libsyscall_intercept.pc DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig COMPONENT dev)
 
 configure_file("${CMAKE_CURRENT_SOURCE_DIR}/cmake/cmake_uninstall.cmake.in"
 	"${CMAKE_CURRENT_BINARY_DIR}/cmake/cmake_uninstall.cmake"
@@ -225,3 +224,6 @@ if(BUILD_TESTS)
 	enable_testing()
 	add_subdirectory(test)
 endif()
+
+# CPACK for debian packages
+include(cmake/cpack.cmake)
