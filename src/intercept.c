@@ -675,7 +675,8 @@ intercept_routine(struct context *context)
 		 * the clone_child_intercept_routine instead, executing
 		 * it on the new child threads stack, then returns to libc.
 		 */
-		if (desc.nr == SYS_clone && desc.args[1] != 0)
+		if ((desc.nr == SYS_clone || desc.nr == SYS_clone3) &&
+			desc.args[1] != 0)
 			return (struct wrapper_ret){
 				.rax = context->rax, .rdx = 2 };
 		else
